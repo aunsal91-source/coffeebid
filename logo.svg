@@ -1,0 +1,86 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .wordmark { font-family: Georgia, "Times New Roman", serif; font-weight: 700; }
+      .subtext { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+  </defs>
+
+  <!-- perforation / stamp ring -->
+  <g fill="#B5472A" opacity="0.5">
+    <circle cx="228.0" cy="120.0" r="2"/>
+    <circle cx="226.7" cy="136.9" r="2"/>
+    <circle cx="222.7" cy="153.4" r="2"/>
+    <circle cx="216.2" cy="169.0" r="2"/>
+    <circle cx="207.4" cy="183.5" r="2"/>
+    <circle cx="196.4" cy="196.4" r="2"/>
+    <circle cx="183.5" cy="207.4" r="2"/>
+    <circle cx="169.0" cy="216.2" r="2"/>
+    <circle cx="153.4" cy="222.7" r="2"/>
+    <circle cx="136.9" cy="226.7" r="2"/>
+    <circle cx="120.0" cy="228.0" r="2"/>
+    <circle cx="103.1" cy="226.7" r="2"/>
+    <circle cx="86.6" cy="222.7" r="2"/>
+    <circle cx="71.0" cy="216.2" r="2"/>
+    <circle cx="56.5" cy="207.4" r="2"/>
+    <circle cx="43.6" cy="196.4" r="2"/>
+    <circle cx="32.6" cy="183.5" r="2"/>
+    <circle cx="23.8" cy="169.0" r="2"/>
+    <circle cx="17.3" cy="153.4" r="2"/>
+    <circle cx="13.3" cy="136.9" r="2"/>
+    <circle cx="12.0" cy="120.0" r="2"/>
+    <circle cx="13.3" cy="103.1" r="2"/>
+    <circle cx="17.3" cy="86.6" r="2"/>
+    <circle cx="23.8" cy="71.0" r="2"/>
+    <circle cx="32.6" cy="56.5" r="2"/>
+    <circle cx="43.6" cy="43.6" r="2"/>
+    <circle cx="56.5" cy="32.6" r="2"/>
+    <circle cx="71.0" cy="23.8" r="2"/>
+    <circle cx="86.6" cy="17.3" r="2"/>
+    <circle cx="103.1" cy="13.3" r="2"/>
+    <circle cx="120.0" cy="12.0" r="2"/>
+    <circle cx="136.9" cy="13.3" r="2"/>
+    <circle cx="153.4" cy="17.3" r="2"/>
+    <circle cx="169.0" cy="23.8" r="2"/>
+    <circle cx="183.5" cy="32.6" r="2"/>
+    <circle cx="196.4" cy="43.6" r="2"/>
+    <circle cx="207.4" cy="56.5" r="2"/>
+    <circle cx="216.2" cy="71.0" r="2"/>
+    <circle cx="222.7" cy="86.6" r="2"/>
+    <circle cx="226.7" cy="103.1" r="2"/>
+  </g>
+
+  <!-- base badge -->
+  <circle cx="120" cy="120" r="100" fill="#F5EDD9" stroke="#B5472A" stroke-width="3"/>
+  <circle cx="120" cy="120" r="90" fill="none" stroke="#1A1208" stroke-width="1" opacity="0.15"/>
+
+  <!-- bottom awning-stripe accent -->
+  <path d="M172,210.1 A104,104 0 0 1 68,210.1" fill="none" stroke="#6FA8D0" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- coffee cup icon -->
+  <g>
+    <!-- side steam curls -->
+    <path d="M100,52 C96,44 104,40 100,32" fill="none" stroke="#1A1208" stroke-width="3.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M140,52 C144,44 136,40 140,32" fill="none" stroke="#1A1208" stroke-width="3.5" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- center steam styled as a rising bid arrow -->
+    <path d="M120,52 Q117,42 120,32" fill="none" stroke="#6B8C6E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M112,40 L120,30 L128,40" fill="none" stroke="#6B8C6E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- saucer -->
+    <ellipse cx="120" cy="111" rx="45" ry="7" fill="#1A1208"/>
+
+    <!-- handle -->
+    <path d="M150,70 C172,70 172,100 150,100" fill="none" stroke="#1A1208" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- cup body -->
+    <path d="M88,62 L95,104 Q120,113 145,104 L152,62 Z" fill="#1A1208"/>
+
+    <!-- coffee surface -->
+    <ellipse cx="120" cy="62" rx="32" ry="8" fill="#B5472A"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="120" y="161" text-anchor="middle" class="wordmark" font-size="23" letter-spacing="0.5" fill="#1A1208">COFFEEBID</text>
+  <text x="120" y="182" text-anchor="middle" class="subtext" font-size="13" font-weight="700" letter-spacing="1" fill="#B5472A">MOST WANTED</text>
+</svg>

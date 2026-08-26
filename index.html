@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>coffeebid.lol — Britain's Most Wanted Coffeeshops</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a href="/" class="logo" aria-label="coffeebid.lol">
+      <svg class="logo-mark" viewBox="0 0 36 28" fill="none" aria-hidden="true">
+        <rect x="0" y="0" width="36" height="6" rx="3" fill="var(--accent)"/>
+        <rect x="0" y="11" width="36" height="6" rx="3" fill="var(--text)"/>
+        <rect x="0" y="22" width="36" height="6" rx="3" fill="var(--text)"/>
+      </svg>
+      <span>coffeebid<span class="logo-dot">.</span>lol</span>
+    </a>
+    <div class="tabs" id="rankTabs" role="tablist">
+      <button class="tab active" data-tab="all" role="tab" aria-selected="true">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>
+        All-time
+      </button>
+      <button class="tab" data-tab="today" role="tab" aria-selected="false">
+        <span class="ping-dot" aria-hidden="true"><span class="ping-dot-ring"></span><span class="ping-dot-core"></span></span>
+        Today
+      </button>
+    </div>
+    <nav class="main-nav">
+      <a href="#board">Most Wanted</a>
+      <a href="#categories">Regions</a>
+      <a href="#about">About</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" title="Switch theme" type="button">🌙</button>
+  </div>
+</header>
+
+<section class="hero wrap" id="bidWidget">
+  <h1 class="sr-only">coffeebid.lol — Britain's Most Wanted Coffeeshops</h1>
+  <p class="hero-stats">
+    <span class="dot-online" aria-hidden="true"></span>
+    <strong id="onlineCount">--</strong> detectives online
+    <span class="dot">·</span>
+    <strong id="visitorCount">--</strong> tip-offs filed
+    <span class="dot">·</span>
+    <span class="money" id="totalEarned">£0</span> paid out in bounties
+  </p>
+
+  <h2 class="claim-line"><span id="claimLabel">Claim #1 Most Wanted Coffeeshop for</span>
+    <span class="inline-stepper">
+      <button type="button" id="stepDown" class="step-btn" aria-label="Decrease bounty by one pound">−</button>
+      <span class="claim-amount-wrap"><span class="currency">£</span><input type="text" id="bidAmount" inputmode="numeric" value="5" class="claim-amount" aria-label="Bounty amount in pounds"></span>
+      <button type="button" id="stepUp" class="step-btn" aria-label="Increase bounty by one pound">+</button>
+    </span>
+  </h2>
+  <p class="hint">Posting less than the top bounty still lands you on the board — wherever that amount ranks. New entries start at £5.</p>
+
+  <div class="link-type-toggle" id="linkTypeToggle" role="group" aria-label="Link type">
+    <button type="button" class="link-type active" data-type="website">
+      <svg class="lt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.3 2.4 3.6 5.5 3.6 9s-1.3 6.6-3.6 9c-2.3-2.4-3.6-5.5-3.6-9s1.3-6.6 3.6-9z"/></svg>
+      Website
+    </button>
+    <button type="button" class="link-type" data-type="instagram">
+      <svg class="lt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+      Instagram
+    </button>
+    <button type="button" class="link-type" data-type="app">
+      <svg class="lt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      App
+    </button>
+  </div>
+
+  <form id="bidForm" class="bid-form" novalidate>
+    <input type="text" id="bidName" placeholder="Coffeeshop name" required autocomplete="off" maxlength="60">
+    <input type="text" id="bidUrl" placeholder="Coffeeshop website (yourcafe.co.uk)" required autocomplete="off">
+    <select id="bidCategory" required>
+      <option value="" disabled selected>Choose a region</option>
+    </select>
+    <div class="bid-form-row">
+      <input type="text" id="bidDesc" placeholder="Wanted for... matcha latte (optional)" maxlength="140">
+      <button type="submit">Post Bounty</button>
+    </div>
+  </form>
+  <div class="url-preview" id="urlPreview" hidden></div>
+  <p class="form-msg" id="formMsg"></p>
+</section>
+
+<div class="wrap layout">
+  <aside class="categories" id="categories">
+    <h3>Regions</h3>
+    <ul id="categoryList"></ul>
+  </aside>
+
+  <main class="board" id="board">
+    <div class="filter-status" id="filterStatus" hidden></div>
+    <ol class="listing-list" id="listingList"></ol>
+    <nav class="pagination" id="boardPagination" aria-label="Board pages" hidden>
+      <button type="button" class="page-btn page-arrow" id="pagePrev" aria-label="Previous page">‹</button>
+      <div class="page-numbers" id="pageNumbers"></div>
+      <button type="button" class="page-btn page-arrow" id="pageNext" aria-label="Next page">›</button>
+    </nav>
+    <p class="page-summary" id="pageSummary"></p>
+
+    <section class="today-section">
+      <div class="section-head">
+        <h3>Today's Most Wanted</h3>
+      </div>
+      <div class="today-row" id="todayTop"></div>
+    </section>
+
+    <section class="activity-section">
+      <h3>Latest Bounties</h3>
+      <div class="activity-row" id="activityList"></div>
+    </section>
+  </main>
+</div>
+
+<section class="about wrap" id="about">
+  <h1 class="about-heading">About</h1>
+  <p class="about-lead">coffeebid.lol started as <span class="accent">a simple side project</span>: no ads, no API keys, no revenue sharing. Just outbid the competition to rank #1 — that's it.</p>
+
+  <h4 class="about-sub">Then it went live</h4>
+  <p class="about-launch">The board went live on <strong id="aboutLaunchDate">--</strong>.</p>
+
+  <p class="about-sub-label">A few numbers since then:</p>
+  <div class="about-stats">
+    <div class="about-stat">
+      <div class="about-stat-value"><span class="dot-online" aria-hidden="true"></span><span id="aboutVisitors">--</span></div>
+      <div class="about-stat-label">visitors</div>
+    </div>
+    <div class="about-stat">
+      <div class="about-stat-value money" id="aboutRevenue">£0</div>
+      <div class="about-stat-label">paid in bounties</div>
+    </div>
+    <div class="about-stat">
+      <div class="about-stat-value money" id="aboutHighest">£0</div>
+      <div class="about-stat-label" id="aboutHighestLabel">highest bounty so far</div>
+    </div>
+  </div>
+
+  <p>coffeebid.lol is a pay-to-rank leaderboard for Britain's coffeeshops. Whoever posts the biggest bounty sits at #1 as the nation's Most Wanted — outbid them and you take their spot, pushing them down the board.</p>
+  <p>This is a satirical, fan-made demo inspired by outbid.lol. All bounties, rankings and stats live in your browser's local storage — nothing is sent anywhere, no real money changes hands, and no coffeeshop listed here is affiliated with or has endorsed this site.</p>
+</section>
+
+<footer class="site-footer wrap">
+  <div>Built as a satirical fan demo · not affiliated with any coffeeshop listed · format inspired by <span class="mono">outbid.lol</span></div>
+  <nav>
+    <a href="#about">Rules</a>
+    <a href="#about">Terms</a>
+    <a href="#about">Privacy</a>
+  </nav>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
