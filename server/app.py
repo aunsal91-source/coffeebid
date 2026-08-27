@@ -172,6 +172,7 @@ def get_visit_count():
 
 
 def get_state():
+    reconcile_stripe_payments()
     with get_conn() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute("""
@@ -208,6 +209,51 @@ def add_listing(listing_id, url, title, desc, category, amount, logo):
                 (listing_id, url, title, desc, category, amount, now_ms, logo),
             )
         conn.commit()
+
+
+RECONCILE_INTERVAL_MS = 5 * 60 * 1000  # don't hit Stripe more than once every 5 minutes
+
+
+def reconcile_stripe_payments():
+    """Safety net for missed webhooks (e.g. a payment lands mid-deploy): pull recent
+    completed Stripe Checkout Sessions and backfill any that never made it into
+    listings. Throttled via meta so normal traffic doesn't hammer the Stripe API."""
+    if not STRIPE_SECRET_KEY:
+        return
+    now_ms = int(time.time() * 1000)
+    try:
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT value FROM meta WHERE key = 'last_reconcile';")
+                row = cur.fetchone()
+                if row and now_ms - int(row[0]) < RECONCILE_INTERVAL_MS:
+                    return
+                cur.execute(
+                    """INSERT INTO meta (key, value) VALUES ('last_reconcile', %s)
+                       ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;""",
+                    (str(now_ms),),
+                )
+            conn.commit()
+
+        sessions = stripe.checkout.Session.list(
+            limit=20,
+            created={"gte": int(time.time()) - 24 * 3600},
+        )
+        for s in sessions.data:
+            if s.payment_status != "paid":
+                continue
+            meta = s.metadata.to_dict() if s.metadata else {}
+            name = meta.get("name")
+            url = meta.get("url")
+            category = meta.get("category")
+            if not (name and url and category):
+                continue
+            add_listing(
+                s.id, url, name, meta.get("desc") or "", category,
+                int(s.amount_total // 100), favicon_for(slug(url)),
+            )
+    except Exception:
+        pass  # reconciliation is best-effort — never break the main page over it
 
 
 IMG_BG = (255, 253, 250)
