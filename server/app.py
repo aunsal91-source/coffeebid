@@ -1,15 +1,19 @@
+import io
 import json
 import os
 import time
 import urllib.parse
+from datetime import datetime, timezone
 from pathlib import Path
 
 import psycopg2
 import psycopg2.extras
+import requests
 import stripe
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
+from PIL import Image, ImageDraw, ImageFont
 
 load_dotenv()
 
@@ -165,6 +169,142 @@ def add_listing(listing_id, url, title, desc, category, amount, logo):
                 (listing_id, url, title, desc, category, amount, now_ms, logo),
             )
         conn.commit()
+
+
+IMG_BG = (255, 253, 250)
+IMG_BG_ALT = (246, 243, 239)
+IMG_BORDER = (230, 224, 218)
+IMG_TEXT = (40, 38, 36)
+IMG_TEXT_DIM = (103, 98, 93)
+IMG_ACCENT = (229, 114, 85)
+RANK_BG = [(251, 227, 219), (249, 233, 227), (247, 238, 233)]
+RANK_BORDER = [(229, 114, 85), (240, 177, 159), (245, 206, 193)]
+
+FONT_PATH = BASE_DIR / "assets" / "DMSans.ttf"
+
+
+def brand_font(size, weight="Regular"):
+    f = ImageFont.truetype(str(FONT_PATH), size)
+    try:
+        f.set_variation_by_name(weight)
+    except Exception:
+        pass
+    return f
+
+
+def fetch_logo_circle(url, size=90):
+    try:
+        r = requests.get(url, timeout=5)
+        src = Image.open(io.BytesIO(r.content)).convert("RGBA")
+        src = src.resize((size, size), Image.LANCZOS)
+        mask = Image.new("L", (size, size), 0)
+        ImageDraw.Draw(mask).ellipse((0, 0, size, size), fill=255)
+        out = Image.new("RGBA", (size, size))
+        out.paste(src, (0, 0), mask)
+        return out
+    except Exception:
+        return None
+
+
+def truncate_to_width(draw, text, font, max_width):
+    if draw.textlength(text, font=font) <= max_width:
+        return text
+    while text and draw.textlength(text + "…", font=font) > max_width:
+        text = text[:-1]
+    return text.rstrip() + "…"
+
+
+def generate_top3_image(top3):
+    W = H = 1080
+    img = Image.new("RGB", (W, H), IMG_BG)
+    draw = ImageDraw.Draw(img)
+
+    # header: bar-icon + "coffeebid.lol" wordmark
+    bar_x, bar_y, bar_w = 60, 66, 100
+    for i, color in enumerate([IMG_ACCENT, IMG_TEXT, IMG_TEXT]):
+        yy = bar_y + i * 26
+        draw.rounded_rectangle([bar_x, yy, bar_x + bar_w, yy + 16], radius=8, fill=color)
+
+    f_logo = brand_font(46, "Medium")
+    x = bar_x + bar_w + 24
+    y = bar_y - 6
+    draw.text((x, y), "coffeebid", font=f_logo, fill=IMG_TEXT)
+    x += draw.textlength("coffeebid", font=f_logo)
+    draw.text((x, y), ".", font=f_logo, fill=IMG_ACCENT)
+    x += draw.textlength(".", font=f_logo)
+    draw.text((x, y), "lol", font=f_logo, fill=IMG_TEXT)
+
+    # title + date, centered
+    title = "TODAY'S MOST WANTED"
+    f_title = brand_font(34, "Bold")
+    tw = draw.textlength(title, font=f_title)
+    draw.text(((W - tw) / 2, 210), title, font=f_title, fill=IMG_TEXT)
+
+    date_str = datetime.now(timezone.utc).strftime("%-d %B %Y") if os.name != "nt" else datetime.now(timezone.utc).strftime("%d %B %Y").lstrip("0")
+    f_date = brand_font(22, "Regular")
+    dw = draw.textlength(date_str, font=f_date)
+    draw.text(((W - dw) / 2, 262), date_str, font=f_date, fill=IMG_TEXT_DIM)
+
+    # top-3 cards
+    card_x, card_w, card_h, gap = 60, W - 120, 210, 24
+    card_y0 = 340
+    for i, item in enumerate(top3[:3]):
+        y0 = card_y0 + i * (card_h + gap)
+        draw.rounded_rectangle(
+            [card_x, y0, card_x + card_w, y0 + card_h],
+            radius=28, fill=RANK_BG[i], outline=RANK_BORDER[i], width=4,
+        )
+
+        f_rank = brand_font(60, "Bold")
+        draw.text((card_x + 36, y0 + card_h / 2 - 34), f"#{i + 1}", font=f_rank, fill=IMG_ACCENT)
+
+        logo_size = 88
+        lx, ly = card_x + 170, y0 + (card_h - logo_size) // 2
+        logo_img = fetch_logo_circle(item.get("logo") or "", logo_size)
+        if logo_img:
+            img.paste(logo_img, (lx, ly), logo_img)
+        else:
+            draw.ellipse([lx, ly, lx + logo_size, ly + logo_size], fill=IMG_BG_ALT, outline=IMG_BORDER, width=2)
+            letter = (item["title"][:1] or "?").upper()
+            f_letter = brand_font(36, "Bold")
+            lw = draw.textlength(letter, font=f_letter)
+            draw.text((lx + logo_size / 2 - lw / 2, ly + logo_size / 2 - 22), letter, font=f_letter, fill=IMG_TEXT_DIM)
+
+        tx = lx + logo_size + 28
+        amt_text = f"£{item['amount']:,}"
+        f_amt = brand_font(46, "Bold")
+        amt_w = draw.textlength(amt_text, font=f_amt)
+        name_max_w = card_x + card_w - 40 - amt_w - 20 - tx
+
+        f_name = brand_font(36, "Bold")
+        name = truncate_to_width(draw, item["title"], f_name, name_max_w)
+        draw.text((tx, y0 + 38), name, font=f_name, fill=IMG_TEXT)
+
+        f_cat = brand_font(22, "Regular")
+        cat = truncate_to_width(draw, item["category"], f_cat, name_max_w)
+        draw.text((tx, y0 + 92), cat, font=f_cat, fill=IMG_TEXT_DIM)
+
+        draw.text((card_x + card_w - 40 - amt_w, y0 + card_h / 2 - 26), amt_text, font=f_amt, fill=IMG_ACCENT)
+
+    footer = "Claim #1 at coffeebid.lol"
+    f_footer = brand_font(26, "Medium")
+    fw = draw.textlength(footer, font=f_footer)
+    draw.text(((W - fw) / 2, 1000), footer, font=f_footer, fill=IMG_TEXT_DIM)
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return buf
+
+
+@app.get("/api/top3-image.png")
+def api_top3_image():
+    state = get_state()
+    top3 = state["listings"][:3]
+    if len(top3) < 3:
+        return jsonify({"error": "Need at least 3 active listings to generate this image."}), 400
+    buf = generate_top3_image(top3)
+    return send_file(buf, mimetype="image/png", as_attachment=False, download_name="coffeebid-top3.png")
 
 
 @app.get("/api/state")
