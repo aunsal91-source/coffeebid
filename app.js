@@ -172,7 +172,8 @@
       stripeConfigured = !!data.stripeConfigured;
       renderAll();
     } catch {
-      // no backend running here — stay in local demo mode
+      // no backend reachable — fall back to local demo mode
+      renderAll();
     }
   }
 
@@ -778,10 +779,10 @@
       if (backendAvailable) sendHeartbeat();
     }, 20000);
 
-    renderAll();
     setInterval(renderAll, 30000); // keep relative timestamps + launch hours fresh
 
-    // real payments, if a backend happens to be running behind this page
+    // wait for the real backend before showing any numbers — avoids flashing
+    // stale/local demo figures on screen before the real data arrives
     tryLoadBackend().then(() => {
       if (backendAvailable) sendHeartbeat();
       const params = new URLSearchParams(window.location.search);
