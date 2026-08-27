@@ -211,7 +211,7 @@ def add_listing(listing_id, url, title, desc, category, amount, logo):
         conn.commit()
 
 
-RECONCILE_INTERVAL_MS = 5 * 60 * 1000  # don't hit Stripe more than once every 5 minutes
+RECONCILE_INTERVAL_MS = 30 * 1000  # don't hit Stripe more than once every 30 seconds
 
 
 def reconcile_stripe_payments():
