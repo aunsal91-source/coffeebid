@@ -332,7 +332,7 @@
 
   function listingCard(l, rank) {
     const li = document.createElement("li");
-    li.className = "listing-card" + (rank === 1 ? " rank-1" : "");
+    li.className = "listing-card" + (rank <= 3 ? ` rank-${rank}` : "");
     li.innerHTML = `
       <div class="rank-num">#${rank}</div>
       <div class="listing-main">
@@ -413,22 +413,33 @@
 
   function renderBoard() {
     const list = rankedListings({ today: activeTab === "today", category: activeCategory });
-    const ol = $("#listingList");
-    ol.innerHTML = "";
+    const olTop = $("#listingListTop");
+    const olRest = $("#listingListRest");
+    olTop.innerHTML = "";
+    olRest.innerHTML = "";
     const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
     if (boardPage > totalPages) boardPage = totalPages;
     const start = (boardPage - 1) * PAGE_SIZE;
     const shown = list.slice(start, start + PAGE_SIZE);
-    shown.forEach((l, i) => ol.appendChild(listingCard(l, start + i + 1)));
+
+    const showInterstitial = boardPage === 1 && shown.length > 3;
+    $("#todaySection").hidden = !showInterstitial;
+    $("#activitySection").hidden = !showInterstitial;
+
+    const topSlice = showInterstitial ? shown.slice(0, 3) : shown;
+    const restSlice = showInterstitial ? shown.slice(3) : [];
+    topSlice.forEach((l, i) => olTop.appendChild(listingCard(l, start + i + 1)));
+    restSlice.forEach((l, i) => olRest.appendChild(listingCard(l, start + 3 + i + 1)));
+
     if (!shown.length) {
       const empty = document.createElement("li");
       empty.style.color = "var(--text-dim)";
       empty.style.fontSize = "13px";
       empty.style.padding = "20px";
       empty.textContent = "No one's wanted here yet. Be the first to post a bounty.";
-      ol.appendChild(empty);
+      olTop.appendChild(empty);
     }
-    ol.querySelectorAll("[data-claim]").forEach((btn) => {
+    [...olTop.querySelectorAll("[data-claim]"), ...olRest.querySelectorAll("[data-claim]")].forEach((btn) => {
       btn.addEventListener("click", () => claimRank(btn.dataset.claim));
     });
     renderPagination(list.length);

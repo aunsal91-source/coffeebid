@@ -246,7 +246,9 @@ a { color: inherit; text-decoration: none; }
   padding: 14px 16px;
   overflow: hidden;
 }
-.listing-card.rank-1 { border: 2px solid var(--accent); background: var(--accent-dim); }
+.listing-card.rank-1, .listing-card.rank-2, .listing-card.rank-3 { background: var(--accent-dim); }
+.listing-card.rank-1 { border: 2px solid var(--accent); }
+.listing-card.rank-2, .listing-card.rank-3 { border: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); }
 .listing-card.rank-1::after {
   content: "MOST WANTED";
   position: absolute;
@@ -267,11 +269,11 @@ a { color: inherit; text-decoration: none; }
 }
 .listing-card.rank-1 .listing-side { padding-top: 22px; }
 .rank-num { font-weight: 800; font-size: 15px; color: var(--text-dim); text-align: center; }
-.rank-1 .rank-num { color: var(--accent); }
+.rank-1 .rank-num, .rank-2 .rank-num, .rank-3 .rank-num { color: var(--accent); }
 .listing-main { min-width: 0; }
-.listing-title { font-weight: 700; font-size: 14.5px; display: block; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.listing-title { font-weight: 700; font-size: 16px; display: block; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .listing-desc {
-  color: var(--text-dim); font-size: 13px; line-height: 1.4; overflow-wrap: break-word;
+  color: var(--text-dim); font-size: 14px; line-height: 1.4; overflow-wrap: break-word;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .listing-meta { display: flex; gap: 10px; margin-top: 6px; font-size: 11.5px; color: var(--text-dim); flex-wrap: wrap; }
@@ -282,7 +284,7 @@ a { color: inherit; text-decoration: none; }
 .listing-meta .directions-link { margin-left: auto; color: var(--accent-2); font-weight: 600; font-size: 13px; }
 .listing-meta .directions-link:hover { text-decoration: underline; }
 .listing-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.listing-side .money { font-size: 15px; }
+.listing-side .money { font-size: 16px; font-weight: 600; }
 .listing-side button {
   font-size: 11.5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
   background: var(--bg); color: var(--text-dim); cursor: pointer; white-space: nowrap;
@@ -314,7 +316,8 @@ a { color: inherit; text-decoration: none; }
 .page-summary { text-align: center; font-size: 12.5px; color: var(--text-dim); margin: 0; }
 
 /* today's top ranking + latest activity — full-width bands below the board */
-.today-section, .activity-section { margin-top: 32px; }
+.today-section, .activity-section { margin: 20px 0; }
+#listingListRest { margin-top: 20px; }
 .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 
 .today-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }

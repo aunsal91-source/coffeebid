@@ -99,25 +99,27 @@
 
   <main class="board" id="board">
     <div class="filter-status" id="filterStatus" hidden></div>
-    <ol class="listing-list" id="listingList"></ol>
-    <nav class="pagination" id="boardPagination" aria-label="Board pages" hidden>
-      <button type="button" class="page-btn page-arrow" id="pagePrev" aria-label="Previous page">‹</button>
-      <div class="page-numbers" id="pageNumbers"></div>
-      <button type="button" class="page-btn page-arrow" id="pageNext" aria-label="Next page">›</button>
-    </nav>
-    <p class="page-summary" id="pageSummary"></p>
+    <ol class="listing-list" id="listingListTop"></ol>
 
-    <section class="today-section">
+    <section class="today-section" id="todaySection">
       <div class="section-head">
         <h3>Today's Most Wanted</h3>
       </div>
       <div class="today-row" id="todayTop"></div>
     </section>
 
-    <section class="activity-section">
+    <section class="activity-section" id="activitySection">
       <h3>Latest Bounties</h3>
       <div class="activity-row" id="activityList"></div>
     </section>
+
+    <ol class="listing-list" id="listingListRest"></ol>
+    <nav class="pagination" id="boardPagination" aria-label="Board pages" hidden>
+      <button type="button" class="page-btn page-arrow" id="pagePrev" aria-label="Previous page">‹</button>
+      <div class="page-numbers" id="pageNumbers"></div>
+      <button type="button" class="page-btn page-arrow" id="pageNext" aria-label="Next page">›</button>
+    </nav>
+    <p class="page-summary" id="pageSummary"></p>
   </main>
 </div>
 
