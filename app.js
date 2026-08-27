@@ -228,7 +228,13 @@
       list = list.filter((l) => l.claimedAt >= cutoff);
     }
     if (category) list = list.filter((l) => l.category === category);
-    list.sort((a, b) => b.amount - a.amount || a.claimedAt - b.claimedAt);
+    list.sort((a, b) => {
+      if (b.amount !== a.amount) return b.amount - a.amount;
+      const aUnclaimed = a.id.startsWith("seed-") ? 1 : 0;
+      const bUnclaimed = b.id.startsWith("seed-") ? 1 : 0;
+      if (aUnclaimed !== bUnclaimed) return aUnclaimed - bUnclaimed;
+      return a.claimedAt - b.claimedAt;
+    });
     return list;
   }
 
