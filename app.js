@@ -14,6 +14,9 @@
     "Notting Hill & Chelsea",
     "Camden & Kentish Town",
     "Peckham & Brixton",
+    "Canary Wharf",
+    "Whitechapel & Wapping",
+    "Tower Bridge & Tower Hill",
     "Other London",
   ];
 
@@ -55,6 +58,9 @@
     { url: "https://farmgirluk.com", title: "Farm Girl", desc: "Wanted for: acai bowls that out-influence the influencers.", category: "Notting Hill & Chelsea", amount: 640, clicks: 3110, hoursAgo: 12 },
     { url: "https://departmentofcoffee.com", title: "Department of Coffee and Social Affairs", desc: "Wanted for: opening a new branch every time you turn around.", category: "Camden & Kentish Town", amount: 510, clicks: 2870, hoursAgo: 5 },
     { url: "https://federationcoffee.com", title: "Federation Coffee", desc: "Wanted for: a Brixton Village queue that blocks the whole arcade.", category: "Peckham & Brixton", amount: 260, clicks: 1590, hoursAgo: 3 },
+    { url: "https://associationcoffee.co.uk", title: "Association Coffee", desc: "Wanted for: keeping the trading floor awake through back-to-back meetings.", category: "Canary Wharf", amount: 480, clicks: 2210, hoursAgo: 22 },
+    { url: "https://wappingcoffeeco.com", title: "Wapping Coffee Co.", desc: "Wanted for: turning a Wapping warehouse into a flat-white pilgrimage.", category: "Whitechapel & Wapping", amount: 340, clicks: 1740, hoursAgo: 14 },
+    { url: "https://bridgecoffeehouse.co.uk", title: "Bridge Coffee House", desc: "Wanted for: out-queuing the Tower Bridge tourists.", category: "Tower Bridge & Tower Hill", amount: 390, clicks: 1980, hoursAgo: 10 },
     { url: "https://ancoatscoffee.co.uk", title: "Ancoats Coffee Co.", desc: "Wanted for: turning a former mill town into flat white territory.", category: "Manchester", amount: 1500, clicks: 6210, hoursAgo: 26 },
     { url: "https://quarterhorsecoffee.com", title: "Quarter Horse Coffee", desc: "Wanted for: out-brewing the Bullring one pour-over at a time.", category: "Birmingham", amount: 950, clicks: 4020, hoursAgo: 45 },
     { url: "https://artisanroast.co.uk", title: "Artisan Roast", desc: "Wanted for: fuelling the Fringe on nothing but flat whites.", category: "Edinburgh", amount: 1350, clicks: 5480, hoursAgo: 18 },

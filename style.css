@@ -279,7 +279,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg); color: var(--text-dim); padding: 2px 8px; border-radius: 999px; font-weight: 600;
   border: 1px solid var(--border);
 }
-.listing-meta .directions-link { margin-left: auto; color: var(--accent-2); font-weight: 600; }
+.listing-meta .directions-link { margin-left: auto; color: var(--accent-2); font-weight: 600; font-size: 13px; }
 .listing-meta .directions-link:hover { text-decoration: underline; }
 .listing-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .listing-side .money { font-size: 15px; }
