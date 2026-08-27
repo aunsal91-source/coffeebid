@@ -67,7 +67,14 @@ SEED_LISTINGS = [
 
 
 def get_conn():
-    return psycopg2.connect(DATABASE_URL, sslmode="require")
+    last_err = None
+    for attempt in range(3):
+        try:
+            return psycopg2.connect(DATABASE_URL, sslmode="require", connect_timeout=10)
+        except psycopg2.OperationalError as e:
+            last_err = e
+            time.sleep(0.5 * (attempt + 1))
+    raise last_err
 
 
 def init_db():
