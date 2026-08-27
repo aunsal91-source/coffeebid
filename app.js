@@ -369,6 +369,7 @@
   function listingCard(l, rank) {
     const li = document.createElement("li");
     li.className = "listing-card" + (rank <= 3 ? ` rank-${rank}` : "");
+    const isUnclaimed = l.id.startsWith("seed-");
     li.innerHTML = `
       <div class="rank-num">#${rank}</div>
       <div class="listing-main">
@@ -382,7 +383,7 @@
         </div>
       </div>
       <div class="listing-side">
-        <span class="money">${fmtMoney(l.amount)}</span>
+        <span class="money${isUnclaimed ? " unclaimed" : ""}">${isUnclaimed ? "UNCLAIMED" : fmtMoney(l.amount)}</span>
         <button type="button" data-claim="${l.id}">post ${fmtMoney(l.amount + 1)} bounty</button>
       </div>
     `;
@@ -502,7 +503,7 @@
           <span class="today-title">${escapeHtml(l.title)}</span>
         </div>
         <div class="today-desc">${escapeHtml(l.desc || slug(l.url))}</div>
-        <div class="today-amt money">${fmtMoney(l.amount)}</div>
+        <div class="today-amt money${l.id.startsWith("seed-") ? " unclaimed" : ""}">${l.id.startsWith("seed-") ? "UNCLAIMED" : fmtMoney(l.amount)}</div>
       `;
       row.appendChild(card);
     });
