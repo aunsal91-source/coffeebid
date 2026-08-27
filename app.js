@@ -344,7 +344,7 @@
         <div class="listing-meta">
           <span class="badge">${escapeHtml(l.category)}</span>
           <span>${timeAgo(l.claimedAt)}</span>
-          <span>${l.clicks.toLocaleString("en-GB")} sightings</span>
+          ${l.clicks > 0 ? `<span>${l.clicks.toLocaleString("en-GB")} sightings</span>` : ""}
           <a class="directions-link" href="${mapsUrlFor(l)}" target="_blank" rel="noopener noreferrer">📍 Directions</a>
         </div>
       </div>
