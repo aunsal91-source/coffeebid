@@ -13,10 +13,12 @@
     "Covent Garden & Holborn",
     "Notting Hill & Chelsea",
     "Camden & Kentish Town",
-    "Peckham & Brixton",
+    "Peckham",
+    "Brixton & Clapham",
     "Canary Wharf",
     "Whitechapel & Wapping",
     "Tower Bridge & Tower Hill",
+    "Canada Water & Bermondsey",
     "Other London",
   ];
 
@@ -57,7 +59,8 @@
     { url: "https://notescoffee.com", title: "Notes Coffee Roasters", desc: "Wanted for: making a basement off Trafalgar feel like a proper hideout.", category: "Covent Garden & Holborn", amount: 1200, clicks: 7010, hoursAgo: 30 },
     { url: "https://farmgirluk.com", title: "Farm Girl", desc: "Wanted for: acai bowls that out-influence the influencers.", category: "Notting Hill & Chelsea", amount: 640, clicks: 3110, hoursAgo: 12 },
     { url: "https://departmentofcoffee.com", title: "Department of Coffee and Social Affairs", desc: "Wanted for: opening a new branch every time you turn around.", category: "Camden & Kentish Town", amount: 510, clicks: 2870, hoursAgo: 5 },
-    { url: "https://federationcoffee.com", title: "Federation Coffee", desc: "Wanted for: a Brixton Village queue that blocks the whole arcade.", category: "Peckham & Brixton", amount: 260, clicks: 1590, hoursAgo: 3 },
+    { url: "https://federationcoffee.com", title: "Federation Coffee", desc: "Wanted for: a Brixton Village queue that blocks the whole arcade.", category: "Brixton & Clapham", amount: 260, clicks: 1590, hoursAgo: 3 },
+    { url: "https://bermondseystreetcoffee.co.uk", title: "Bermondsey Street Coffee", desc: "Wanted for: turning a railway arch into London's best-kept coffee secret.", category: "Canada Water & Bermondsey", amount: 320, clicks: 1650, hoursAgo: 11 },
     { url: "https://associationcoffee.co.uk", title: "Association Coffee", desc: "Wanted for: keeping the trading floor awake through back-to-back meetings.", category: "Canary Wharf", amount: 480, clicks: 2210, hoursAgo: 22 },
     { url: "https://wappingcoffeeco.com", title: "Wapping Coffee Co.", desc: "Wanted for: turning a Wapping warehouse into a flat-white pilgrimage.", category: "Whitechapel & Wapping", amount: 340, clicks: 1740, hoursAgo: 14 },
     { url: "https://bridgecoffeehouse.co.uk", title: "Bridge Coffee House", desc: "Wanted for: out-queuing the Tower Bridge tourists.", category: "Tower Bridge & Tower Hill", amount: 390, clicks: 1980, hoursAgo: 10 },
