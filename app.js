@@ -5,6 +5,7 @@
   const LAUNCH_KEY = "coffeebid_launch_v1";
   const SESSION_KEY = "coffeebid_session_v1";
   const PAGE_SIZE = 50;
+  const MIN_BID = 5;
 
   const LONDON_REGIONS = [
     "Clerkenwell & Farringdon",
@@ -221,6 +222,10 @@
   }
 
   // ---- derived views ----
+  function effectiveAmount(l) {
+    return l.id.startsWith("seed-") ? 0 : l.amount;
+  }
+
   function rankedListings({ today = false, category = null } = {}) {
     let list = state.listings.slice();
     if (today) {
@@ -229,10 +234,8 @@
     }
     if (category) list = list.filter((l) => l.category === category);
     list.sort((a, b) => {
-      if (b.amount !== a.amount) return b.amount - a.amount;
-      const aUnclaimed = a.id.startsWith("seed-") ? 1 : 0;
-      const bUnclaimed = b.id.startsWith("seed-") ? 1 : 0;
-      if (aUnclaimed !== bUnclaimed) return aUnclaimed - bUnclaimed;
+      const ea = effectiveAmount(a), eb = effectiveAmount(b);
+      if (eb !== ea) return eb - ea;
       return a.claimedAt - b.claimedAt;
     });
     return list;
@@ -286,7 +289,8 @@
 
   function currentTopAmount() {
     const list = rankedListings({ category: activeCategory });
-    return list.length ? list[0].amount : 4;
+    const top = list.length ? effectiveAmount(list[0]) : 0;
+    return Math.max(MIN_BID - 1, top);
   }
 
   function sizeAmountInput(el) {
@@ -350,7 +354,7 @@
 
   function currentTopAmountFor(cat) {
     const list = rankedListings({ category: cat });
-    return list.length ? list[0].amount : 0;
+    return list.length ? effectiveAmount(list[0]) : 0;
   }
 
   function renderFilterStatus() {
@@ -391,7 +395,7 @@
       </div>
       <div class="listing-side">
         <span class="money${isUnclaimed ? " unclaimed" : ""}">${isUnclaimed ? "UNCLAIMED" : fmtMoney(l.amount)}</span>
-        <button type="button" data-claim="${l.id}">claim this spot for ${fmtMoney(l.amount + 1)}</button>
+        <button type="button" data-claim="${l.id}">claim this spot for ${fmtMoney(isUnclaimed ? MIN_BID : l.amount + 1)}</button>
       </div>
     `;
     return li;
