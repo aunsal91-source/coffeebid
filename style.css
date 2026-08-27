@@ -246,9 +246,18 @@ a { color: inherit; text-decoration: none; }
   padding: 14px 16px;
   overflow: hidden;
 }
-.listing-card.rank-1, .listing-card.rank-2, .listing-card.rank-3 { background: var(--accent-dim); }
-.listing-card.rank-1 { border: 2px solid var(--accent); }
-.listing-card.rank-2, .listing-card.rank-3 { border: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+.listing-card.rank-1 {
+  background: var(--accent-dim);
+  border: 2px solid var(--accent);
+}
+.listing-card.rank-2 {
+  background: color-mix(in srgb, var(--accent-dim) 60%, var(--bg-alt) 40%);
+  border: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.listing-card.rank-3 {
+  background: color-mix(in srgb, var(--accent-dim) 30%, var(--bg-alt) 70%);
+  border: 2px solid color-mix(in srgb, var(--accent) 20%, transparent);
+}
 .listing-card.rank-1::after {
   content: "MOST WANTED";
   position: absolute;
