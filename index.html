@@ -47,7 +47,7 @@
     <span class="dot-online" aria-hidden="true"></span>
     <strong id="onlineCount">--</strong> detectives online
     <span class="dot">·</span>
-    <strong id="visitorCount">--</strong> tip-offs filed
+    <strong id="visitorCount">--</strong> visits logged
     <span class="dot">·</span>
     <span class="money" id="totalEarned">£0</span> paid out in bounties
   </p>
@@ -84,7 +84,7 @@
     </select>
     <div class="bid-form-row">
       <input type="text" id="bidDesc" placeholder="Wanted for... matcha latte (optional)" maxlength="140">
-      <button type="submit">Post Bounty</button>
+      <button type="submit">Post Your Coffeeshop</button>
     </div>
   </form>
   <div class="url-preview" id="urlPreview" hidden></div>
@@ -150,12 +150,48 @@
   <p>Payments are processed securely by Stripe — coffeebid.lol never sees or stores your card details. No coffeeshop listed here is affiliated with or has endorsed this site.</p>
 </section>
 
+<section class="about wrap" id="rules">
+  <h3>Rules</h3>
+  <p>Whoever has posted the biggest bounty for a region sits at #1 for that region. Ties are broken by whoever paid first.</p>
+  <ul>
+    <li>Bounties start at £5. There's no maximum.</li>
+    <li>Every bounty is its own entry — to reclaim #1 after someone outbids you, post a new, higher bounty.</li>
+    <li>Rankings update automatically as soon as a payment is confirmed.</li>
+    <li>Only list a coffeeshop you have the right to list — we may remove listings that are fake, abusive, illegal, or clearly not a genuine coffeeshop, without a refund.</li>
+  </ul>
+</section>
+
+<section class="about wrap" id="terms">
+  <h3>Terms</h3>
+  <p>By posting a bounty on coffeebid.lol you agree to these terms. coffeebid.lol is a pay-to-rank leaderboard, not a directory, review site, or advertising guarantee — a top ranking reflects the highest bounty paid, not any endorsement by us.</p>
+  <ul>
+    <li><strong>Payments are final.</strong> Bounties are non-refundable once processed, including if you're later outbid.</li>
+    <li>We don't guarantee any amount of traffic, clicks, sightings, or business results from a listing.</li>
+    <li>We may edit, remove, or decline any listing at our discretion, and may change or discontinue the service at any time.</li>
+    <li>Don't use the service for anything illegal, fraudulent, or abusive.</li>
+    <li>The service is provided "as is" without warranties; to the extent permitted by law, coffeebid.lol isn't liable for indirect or consequential losses arising from your use of it.</li>
+    <li>These terms are governed by the law of England and Wales.</li>
+  </ul>
+</section>
+
+<section class="about wrap" id="privacy">
+  <h3>Privacy</h3>
+  <p>We keep this simple.</p>
+  <ul>
+    <li><strong>What we store:</strong> the coffeeshop name, link, region, description and bounty amount you submit — these are public and shown on the board.</li>
+    <li><strong>Payments:</strong> handled entirely by Stripe. We never see or store your card details.</li>
+    <li><strong>Your browser:</strong> we store a light/dark theme preference locally on your device — nothing else.</li>
+    <li><strong>Third parties:</strong> Stripe (payments), Google's favicon service (site icons), and our hosting/database provider (Render).</li>
+    <li>Questions or requests about your data: <a href="mailto:hello@coffeebid.lol">hello@coffeebid.lol</a>.</li>
+  </ul>
+</section>
+
 <footer class="site-footer wrap">
   <div>© 2026 coffeebid.lol · not affiliated with any coffeeshop listed</div>
   <nav>
-    <a href="#about">Rules</a>
-    <a href="#about">Terms</a>
-    <a href="#about">Privacy</a>
+    <a href="#rules">Rules</a>
+    <a href="#terms">Terms</a>
+    <a href="#privacy">Privacy</a>
   </nav>
 </footer>
 

@@ -364,6 +364,10 @@ a { color: inherit; text-decoration: none; }
 /* about / footer */
 .about { padding: 40px 20px 10px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13.5px; }
 .about h3 { color: var(--text); }
+.about ul { margin: 0 0 16px; padding-left: 20px; line-height: 1.6; }
+.about li { margin-bottom: 6px; }
+.about li strong { color: var(--text); }
+.about a { color: var(--accent-2); text-decoration: underline; }
 .about-heading { font-size: 2rem; font-weight: 700; color: var(--text); margin: 0 0 16px; }
 .about-lead { font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
 .about-sub { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 6px; }

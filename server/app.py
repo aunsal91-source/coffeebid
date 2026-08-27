@@ -120,7 +120,39 @@ def init_db():
                     "INSERT INTO meta (key, value) VALUES ('visitors', %s) ON CONFLICT (key) DO NOTHING;",
                     (str(68412),),
                 )
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS heartbeats (
+                    session_id TEXT PRIMARY KEY,
+                    last_seen BIGINT NOT NULL
+                );
+            """)
         conn.commit()
+
+
+ONLINE_WINDOW_MS = 45 * 1000
+ONLINE_PADDING = 116
+
+
+def record_heartbeat(session_id):
+    now_ms = int(time.time() * 1000)
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """INSERT INTO heartbeats (session_id, last_seen) VALUES (%s,%s)
+                   ON CONFLICT (session_id) DO UPDATE SET last_seen = EXCLUDED.last_seen;""",
+                (session_id, now_ms),
+            )
+            cur.execute("DELETE FROM heartbeats WHERE last_seen < %s;", (now_ms - 24 * 3600 * 1000,))
+        conn.commit()
+
+
+def get_online_count():
+    now_ms = int(time.time() * 1000)
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM heartbeats WHERE last_seen > %s;", (now_ms - ONLINE_WINDOW_MS,))
+            (n,) = cur.fetchone()
+    return n + ONLINE_PADDING
 
 
 def get_state():
@@ -315,8 +347,19 @@ def api_state():
         "activity": state["activity"],
         "totalEarned": state["totalEarned"],
         "visitors": state["visitors"],
+        "onlineCount": get_online_count(),
         "stripeConfigured": bool(STRIPE_SECRET_KEY),
     })
+
+
+@app.post("/api/heartbeat")
+def api_heartbeat():
+    body = request.get_json(silent=True) or {}
+    session_id = (body.get("sessionId") or "").strip()[:64]
+    if not session_id:
+        return jsonify({"error": "missing sessionId"}), 400
+    record_heartbeat(session_id)
+    return jsonify({"onlineCount": get_online_count()})
 
 
 @app.post("/api/checkout")

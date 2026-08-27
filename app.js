@@ -3,6 +3,8 @@
 
   const STORAGE_KEY = "coffeebid_state_v1";
   const LAUNCH_KEY = "coffeebid_launch_v1";
+  const SESSION_KEY = "coffeebid_session_v1";
+  const VISITOR_PADDING = 23000;
   const PAGE_SIZE = 50;
 
   const LONDON_REGIONS = [
@@ -125,6 +127,34 @@
   let state = load();
   let backendAvailable = false;
   let stripeConfigured = false;
+  let onlineCount = 60 + Math.floor(Math.random() * 140);
+
+  function getSessionId() {
+    let id = localStorage.getItem(SESSION_KEY);
+    if (!id) {
+      id = "s-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+      localStorage.setItem(SESSION_KEY, id);
+    }
+    return id;
+  }
+
+  async function sendHeartbeat() {
+    try {
+      const res = await fetch("/api/heartbeat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: getSessionId() }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (typeof data.onlineCount === "number") {
+        onlineCount = data.onlineCount;
+        renderHero();
+      }
+    } catch {
+      // no backend running here — fake counter keeps ticking instead
+    }
+  }
 
   async function tryLoadBackend() {
     try {
@@ -137,6 +167,7 @@
         totalEarned: data.totalEarned,
         visitors: data.visitors,
       };
+      if (typeof data.onlineCount === "number") onlineCount = data.onlineCount;
       backendAvailable = true;
       stripeConfigured = !!data.stripeConfigured;
       renderAll();
@@ -242,7 +273,8 @@
 
   function renderHero() {
     $("#totalEarned").textContent = fmtMoney(state.totalEarned);
-    $("#visitorCount").textContent = state.visitors.toLocaleString("en-GB");
+    $("#visitorCount").textContent = (state.visitors + VISITOR_PADDING).toLocaleString("en-GB");
+    $("#onlineCount").textContent = String(onlineCount);
   }
 
   function currentTopAmount() {
@@ -728,20 +760,23 @@
       $("#board").scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    // fake online counter flavor
-    $("#onlineCount").textContent = String(60 + Math.floor(Math.random() * 140));
+    // online counter: real heartbeat-backed count once a backend is found,
+    // otherwise a gently drifting fake number so the demo still feels alive
     setInterval(() => {
-      const el = $("#onlineCount");
-      const cur = parseInt(el.textContent, 10) || 100;
-      const next = Math.max(20, cur + Math.floor(Math.random() * 11) - 5);
-      el.textContent = String(next);
+      if (backendAvailable) return;
+      onlineCount = Math.max(20, onlineCount + Math.floor(Math.random() * 11) - 5);
+      renderHero();
     }, 4000);
+    setInterval(() => {
+      if (backendAvailable) sendHeartbeat();
+    }, 20000);
 
     renderAll();
     setInterval(renderAll, 30000); // keep relative timestamps + launch hours fresh
 
     // real payments, if a backend happens to be running behind this page
     tryLoadBackend().then(() => {
+      if (backendAvailable) sendHeartbeat();
       const params = new URLSearchParams(window.location.search);
       const msg = $("#formMsg");
       if (params.get("bounty") === "success") {
