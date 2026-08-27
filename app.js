@@ -298,7 +298,9 @@
   }
 
   function renderBidWidget() {
-    $("#claimLabel").textContent = activeCategory ? `Claim #1 Most Wanted Coffeeshop in ${activeCategory} for` : "Claim #1 Most Wanted Coffeeshop for";
+    $("#claimLabel").innerHTML = activeCategory
+      ? `Claim <span class="claim-highlight">#1 Most Wanted</span> Coffeeshop in ${escapeHtml(activeCategory)} for`
+      : `Claim <span class="claim-highlight">#1 Most Wanted</span> Coffeeshop for`;
     const top = currentTopAmount();
     const amountEl = $("#bidAmount");
     if (!amountEl.dataset.userEdited) {
