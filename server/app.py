@@ -116,14 +116,16 @@ def init_db():
                         (f"seed-{i}", s["url"], s["title"], s["desc"], s["category"], s["amount"],
                          s["clicks"], claimed_at, favicon_for(slug(s["url"]))),
                     )
-                cur.execute(
-                    "INSERT INTO meta (key, value) VALUES ('visitors', %s) ON CONFLICT (key) DO NOTHING;",
-                    (str(68412),),
-                )
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS heartbeats (
                     session_id TEXT PRIMARY KEY,
                     last_seen BIGINT NOT NULL
+                );
+            """)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS visits (
+                    session_id TEXT PRIMARY KEY,
+                    first_seen BIGINT NOT NULL
                 );
             """)
         conn.commit()
@@ -131,6 +133,7 @@ def init_db():
 
 ONLINE_WINDOW_MS = 45 * 1000
 ONLINE_PADDING = 116
+VISITOR_PADDING = 12000
 
 
 def record_heartbeat(session_id):
@@ -140,6 +143,11 @@ def record_heartbeat(session_id):
             cur.execute(
                 """INSERT INTO heartbeats (session_id, last_seen) VALUES (%s,%s)
                    ON CONFLICT (session_id) DO UPDATE SET last_seen = EXCLUDED.last_seen;""",
+                (session_id, now_ms),
+            )
+            cur.execute(
+                """INSERT INTO visits (session_id, first_seen) VALUES (%s,%s)
+                   ON CONFLICT (session_id) DO NOTHING;""",
                 (session_id, now_ms),
             )
             cur.execute("DELETE FROM heartbeats WHERE last_seen < %s;", (now_ms - 24 * 3600 * 1000,))
@@ -153,6 +161,14 @@ def get_online_count():
             cur.execute("SELECT COUNT(*) FROM heartbeats WHERE last_seen > %s;", (now_ms - ONLINE_WINDOW_MS,))
             (n,) = cur.fetchone()
     return n + ONLINE_PADDING
+
+
+def get_visit_count():
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM visits;")
+            (n,) = cur.fetchone()
+    return n + VISITOR_PADDING
 
 
 def get_state():
@@ -173,20 +189,11 @@ def get_state():
             cur.execute("SELECT COALESCE(SUM(amount), 0) AS total FROM listings;")
             total_earned = cur.fetchone()["total"]
 
-            cur.execute("SELECT value FROM meta WHERE key = 'visitors';")
-            row = cur.fetchone()
-            visitors = int(row["value"]) if row else 68412
-
-            # nudge the visitor counter up a little on every read, just for flavour
-            visitors += 1
-            cur.execute("UPDATE meta SET value = %s WHERE key = 'visitors';", (str(visitors),))
-        conn.commit()
-
     return {
         "listings": listings,
         "activity": activity,
         "totalEarned": int(total_earned),
-        "visitors": visitors,
+        "visitors": get_visit_count(),
     }
 
 

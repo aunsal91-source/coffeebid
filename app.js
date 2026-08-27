@@ -4,7 +4,6 @@
   const STORAGE_KEY = "coffeebid_state_v1";
   const LAUNCH_KEY = "coffeebid_launch_v1";
   const SESSION_KEY = "coffeebid_session_v1";
-  const VISITOR_PADDING = 23000;
   const PAGE_SIZE = 50;
 
   const LONDON_REGIONS = [
@@ -280,7 +279,7 @@
 
   function renderHero() {
     $("#totalEarned").textContent = fmtMoney(state.totalEarned);
-    $("#visitorCount").textContent = (state.visitors + VISITOR_PADDING).toLocaleString("en-GB");
+    $("#visitorCount").textContent = state.visitors.toLocaleString("en-GB");
     $("#onlineCount").textContent = String(onlineCount);
   }
 
