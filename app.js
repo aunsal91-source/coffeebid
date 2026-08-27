@@ -291,7 +291,8 @@
       for (const c of group.regions) {
         const li = document.createElement("li");
         li.className = activeCategory === c ? "active" : "";
-        li.innerHTML = `<a href="#board" data-cat="${c}">${icon}<span>${c}</span><span class="cat-amt">${fmtMoney(totals[c] || 0)}</span></a>`;
+        const amtLabel = totals[c] ? fmtMoney(totals[c]) : "UNCLAIMED";
+        li.innerHTML = `<a href="#board" data-cat="${c}">${icon}<span>${c}</span><span class="cat-amt${totals[c] ? "" : " unclaimed"}">${amtLabel}</span></a>`;
         ul.appendChild(li);
       }
     }

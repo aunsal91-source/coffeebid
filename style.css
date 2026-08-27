@@ -215,6 +215,7 @@ a { color: inherit; text-decoration: none; }
 .categories li.active a .cat-icon, .categories li a:hover .cat-icon { color: var(--accent); }
 .categories li a span:not(.cat-amt) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .categories li a .cat-amt { color: var(--money); font-weight: 600; white-space: nowrap; flex: 0 0 auto; }
+.categories li a .cat-amt.unclaimed { color: var(--text-dim); font-weight: 700; font-size: 10.5px; letter-spacing: .04em; opacity: .7; }
 .categories li.group-label {
   font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700;
   color: var(--text-dim); padding: 10px 8px 2px; opacity: .75;
