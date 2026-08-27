@@ -56,7 +56,17 @@
     <span class="money" id="totalEarned">£0</span> paid out in bounties
   </p>
 
-  <h2 class="claim-line"><span id="claimLabel">Claim #1 Most Wanted Coffeeshop for</span>
+  <h2 class="claim-line">
+    <svg class="claim-icon" viewBox="0 0 64 80" fill="none" aria-hidden="true">
+      <path d="M18 14c4-3 4-7 0-10" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M32 14c4-3 4-7 0-10" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M46 14c4-3 4-7 0-10" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+      <rect x="10" y="18" width="44" height="10" rx="5" fill="var(--bg)" stroke="var(--text)" stroke-width="3"/>
+      <path d="M12 30h40" stroke="var(--text)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M14 32h36l-4.5 34a4 4 0 0 1-4 3.6h-19a4 4 0 0 1-4-3.6z" fill="var(--bg)" stroke="var(--text)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M16 44h32l-1 12H17z" fill="var(--accent)"/>
+    </svg>
+    <span id="claimLabel">Claim #1 Most Wanted Coffeeshop for</span>
     <span class="inline-stepper">
       <button type="button" id="stepDown" class="step-btn" aria-label="Decrease bounty by one pound">−</button>
       <span class="claim-amount-wrap"><span class="currency">£</span><input type="text" id="bidAmount" inputmode="numeric" value="5" class="claim-amount" aria-label="Bounty amount in pounds"></span>
