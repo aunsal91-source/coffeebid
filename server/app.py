@@ -215,19 +215,19 @@ def truncate_to_width(draw, text, font, max_width):
 
 
 def generate_top3_image(top3):
-    W, H = 1080, 1160
+    W, H = 1080, 1260
     img = Image.new("RGB", (W, H), IMG_BG)
     draw = ImageDraw.Draw(img)
 
     # header: bar-icon + "coffeebid.lol" wordmark
-    bar_x, bar_y, bar_w = 60, 66, 100
+    bar_x, bar_y, bar_w = 60, 62, 112
     for i, color in enumerate([IMG_ACCENT, IMG_TEXT, IMG_TEXT]):
-        yy = bar_y + i * 26
-        draw.rounded_rectangle([bar_x, yy, bar_x + bar_w, yy + 16], radius=8, fill=color)
+        yy = bar_y + i * 29
+        draw.rounded_rectangle([bar_x, yy, bar_x + bar_w, yy + 18], radius=9, fill=color)
 
-    f_logo = brand_font(46, "Medium")
-    x = bar_x + bar_w + 24
-    y = bar_y - 6
+    f_logo = brand_font(54, "Medium")
+    x = bar_x + bar_w + 26
+    y = bar_y - 10
     draw.text((x, y), "coffeebid", font=f_logo, fill=IMG_TEXT)
     x += draw.textlength("coffeebid", font=f_logo)
     draw.text((x, y), ".", font=f_logo, fill=IMG_ACCENT)
@@ -236,60 +236,60 @@ def generate_top3_image(top3):
 
     # title + date, centered
     title = "TODAY'S MOST WANTED"
-    f_title = brand_font(34, "Bold")
+    f_title = brand_font(42, "Bold")
     tw = draw.textlength(title, font=f_title)
-    draw.text(((W - tw) / 2, 210), title, font=f_title, fill=IMG_TEXT)
+    draw.text(((W - tw) / 2, 216), title, font=f_title, fill=IMG_TEXT)
 
     date_str = datetime.now(timezone.utc).strftime("%-d %B %Y") if os.name != "nt" else datetime.now(timezone.utc).strftime("%d %B %Y").lstrip("0")
-    f_date = brand_font(22, "Regular")
+    f_date = brand_font(26, "Regular")
     dw = draw.textlength(date_str, font=f_date)
-    draw.text(((W - dw) / 2, 262), date_str, font=f_date, fill=IMG_TEXT_DIM)
+    draw.text(((W - dw) / 2, 276), date_str, font=f_date, fill=IMG_TEXT_DIM)
 
     # top-3 cards
-    card_x, card_w, card_h, gap = 60, W - 120, 210, 24
-    card_y0 = 340
+    card_x, card_w, card_h, gap = 60, W - 120, 240, 26
+    card_y0 = 360
     for i, item in enumerate(top3[:3]):
         y0 = card_y0 + i * (card_h + gap)
         draw.rounded_rectangle(
             [card_x, y0, card_x + card_w, y0 + card_h],
-            radius=28, fill=RANK_BG[i], outline=RANK_BORDER[i], width=4,
+            radius=30, fill=RANK_BG[i], outline=RANK_BORDER[i], width=4,
         )
 
-        f_rank = brand_font(60, "Bold")
-        draw.text((card_x + 36, y0 + card_h / 2 - 34), f"#{i + 1}", font=f_rank, fill=IMG_ACCENT)
+        f_rank = brand_font(72, "Bold")
+        draw.text((card_x + 36, y0 + card_h / 2 - 42), f"#{i + 1}", font=f_rank, fill=IMG_ACCENT)
 
-        logo_size = 88
-        lx, ly = card_x + 170, y0 + (card_h - logo_size) // 2
+        logo_size = 100
+        lx, ly = card_x + 190, y0 + (card_h - logo_size) // 2
         logo_img = fetch_logo_circle(item.get("logo") or "", logo_size)
         if logo_img:
             img.paste(logo_img, (lx, ly), logo_img)
         else:
             draw.ellipse([lx, ly, lx + logo_size, ly + logo_size], fill=IMG_BG_ALT, outline=IMG_BORDER, width=2)
             letter = (item["title"][:1] or "?").upper()
-            f_letter = brand_font(36, "Bold")
+            f_letter = brand_font(42, "Bold")
             lw = draw.textlength(letter, font=f_letter)
-            draw.text((lx + logo_size / 2 - lw / 2, ly + logo_size / 2 - 22), letter, font=f_letter, fill=IMG_TEXT_DIM)
+            draw.text((lx + logo_size / 2 - lw / 2, ly + logo_size / 2 - 26), letter, font=f_letter, fill=IMG_TEXT_DIM)
 
-        tx = lx + logo_size + 28
+        tx = lx + logo_size + 30
         amt_text = f"£{item['amount']:,}"
-        f_amt = brand_font(46, "Bold")
+        f_amt = brand_font(54, "Bold")
         amt_w = draw.textlength(amt_text, font=f_amt)
         name_max_w = card_x + card_w - 40 - amt_w - 20 - tx
 
-        f_name = brand_font(36, "Bold")
+        f_name = brand_font(42, "Bold")
         name = truncate_to_width(draw, item["title"], f_name, name_max_w)
-        draw.text((tx, y0 + 38), name, font=f_name, fill=IMG_TEXT)
+        draw.text((tx, y0 + 42), name, font=f_name, fill=IMG_TEXT)
 
-        f_cat = brand_font(22, "Regular")
+        f_cat = brand_font(26, "Regular")
         cat = truncate_to_width(draw, item["category"], f_cat, name_max_w)
-        draw.text((tx, y0 + 92), cat, font=f_cat, fill=IMG_TEXT_DIM)
+        draw.text((tx, y0 + 106), cat, font=f_cat, fill=IMG_TEXT_DIM)
 
-        draw.text((card_x + card_w - 40 - amt_w, y0 + card_h / 2 - 26), amt_text, font=f_amt, fill=IMG_ACCENT)
+        draw.text((card_x + card_w - 40 - amt_w, y0 + card_h / 2 - 30), amt_text, font=f_amt, fill=IMG_ACCENT)
 
     footer = "Claim #1 at coffeebid.lol"
-    f_footer = brand_font(26, "Medium")
+    f_footer = brand_font(32, "Medium")
     fw = draw.textlength(footer, font=f_footer)
-    draw.text(((W - fw) / 2, 1068), footer, font=f_footer, fill=IMG_TEXT_DIM)
+    draw.text(((W - fw) / 2, card_y0 + 3 * card_h + 2 * gap + 50), footer, font=f_footer, fill=IMG_TEXT_DIM)
 
     buf = io.BytesIO()
     img.save(buf, format="PNG")
