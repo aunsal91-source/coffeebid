@@ -186,7 +186,7 @@ def get_state():
             """)
             activity = [dict(r) for r in cur.fetchall()]
 
-            cur.execute("SELECT COALESCE(SUM(amount), 0) AS total FROM listings;")
+            cur.execute("SELECT COALESCE(SUM(amount), 0) AS total FROM listings WHERE id NOT LIKE 'seed-%';")
             total_earned = cur.fetchone()["total"]
 
     return {

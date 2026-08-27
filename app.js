@@ -242,7 +242,8 @@
     const totals = {};
     for (const c of CATEGORIES) totals[c] = 0;
     for (const l of state.listings) {
-      totals[l.category] = Math.max(totals[l.category] || 0, l.amount);
+      if (l.id.startsWith("seed-")) continue; // unclaimed listings haven't actually been paid for — count as £0
+      totals[l.category] = (totals[l.category] || 0) + l.amount;
     }
     return totals;
   }
@@ -314,11 +315,12 @@
 
   function renderCategories() {
     const totals = categoryTotals();
+    const allTotal = Object.values(totals).reduce((sum, v) => sum + v, 0);
     const ul = $("#categoryList");
     ul.innerHTML = "";
     const allLi = document.createElement("li");
     allLi.className = activeCategory === null ? "active" : "";
-    allLi.innerHTML = `<a href="#board" data-cat="">${ALL_ICON}<span>All</span><span class="cat-amt">${fmtMoney(currentTopAmountFor(null))}</span></a>`;
+    allLi.innerHTML = `<a href="#board" data-cat="">${ALL_ICON}<span>All</span><span class="cat-amt">${fmtMoney(allTotal)}</span></a>`;
     ul.appendChild(allLi);
     for (const group of REGION_GROUPS) {
       const groupLi = document.createElement("li");
@@ -329,8 +331,7 @@
       for (const c of group.regions) {
         const li = document.createElement("li");
         li.className = activeCategory === c ? "active" : "";
-        const amtLabel = totals[c] ? fmtMoney(totals[c]) : "UNCLAIMED";
-        li.innerHTML = `<a href="#board" data-cat="${c}">${icon}<span>${c}</span><span class="cat-amt${totals[c] ? "" : " unclaimed"}">${amtLabel}</span></a>`;
+        li.innerHTML = `<a href="#board" data-cat="${c}">${icon}<span>${c}</span><span class="cat-amt">${fmtMoney(totals[c])}</span></a>`;
         ul.appendChild(li);
       }
     }
@@ -390,7 +391,7 @@
       </div>
       <div class="listing-side">
         <span class="money${isUnclaimed ? " unclaimed" : ""}">${isUnclaimed ? "UNCLAIMED" : fmtMoney(l.amount)}</span>
-        <button type="button" data-claim="${l.id}">post ${fmtMoney(l.amount + 1)} bounty</button>
+        <button type="button" data-claim="${l.id}">claim this spot for ${fmtMoney(l.amount + 1)}</button>
       </div>
     `;
     return li;
