@@ -215,7 +215,7 @@ def truncate_to_width(draw, text, font, max_width):
 
 
 def generate_top3_image(top3):
-    W = H = 1080
+    W, H = 1080, 1160
     img = Image.new("RGB", (W, H), IMG_BG)
     draw = ImageDraw.Draw(img)
 
@@ -289,7 +289,7 @@ def generate_top3_image(top3):
     footer = "Claim #1 at coffeebid.lol"
     f_footer = brand_font(26, "Medium")
     fw = draw.textlength(footer, font=f_footer)
-    draw.text(((W - fw) / 2, 1000), footer, font=f_footer, fill=IMG_TEXT_DIM)
+    draw.text(((W - fw) / 2, 1068), footer, font=f_footer, fill=IMG_TEXT_DIM)
 
     buf = io.BytesIO()
     img.save(buf, format="PNG")
