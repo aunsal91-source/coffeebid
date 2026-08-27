@@ -143,7 +143,7 @@
       const res = await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId: getSessionId() }),
+        body: JSON.stringify({ sessionId: getSessionId(), referrer: document.referrer }),
       });
       if (!res.ok) return;
       const data = await res.json();

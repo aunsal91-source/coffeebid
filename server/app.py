@@ -128,6 +128,8 @@ def init_db():
                     first_seen BIGINT NOT NULL
                 );
             """)
+            cur.execute("ALTER TABLE visits ADD COLUMN IF NOT EXISTS user_agent TEXT;")
+            cur.execute("ALTER TABLE visits ADD COLUMN IF NOT EXISTS referrer TEXT;")
         conn.commit()
 
 
@@ -136,7 +138,7 @@ ONLINE_PADDING = 56
 VISITOR_PADDING = 12000
 
 
-def record_heartbeat(session_id):
+def record_heartbeat(session_id, user_agent="", referrer=""):
     now_ms = int(time.time() * 1000)
     with get_conn() as conn:
         with conn.cursor() as cur:
@@ -146,9 +148,9 @@ def record_heartbeat(session_id):
                 (session_id, now_ms),
             )
             cur.execute(
-                """INSERT INTO visits (session_id, first_seen) VALUES (%s,%s)
+                """INSERT INTO visits (session_id, first_seen, user_agent, referrer) VALUES (%s,%s,%s,%s)
                    ON CONFLICT (session_id) DO NOTHING;""",
-                (session_id, now_ms),
+                (session_id, now_ms, user_agent[:300], referrer[:300]),
             )
             cur.execute("DELETE FROM heartbeats WHERE last_seen < %s;", (now_ms - 24 * 3600 * 1000,))
         conn.commit()
@@ -411,7 +413,9 @@ def api_heartbeat():
     session_id = (body.get("sessionId") or "").strip()[:64]
     if not session_id:
         return jsonify({"error": "missing sessionId"}), 400
-    record_heartbeat(session_id)
+    user_agent = request.headers.get("User-Agent", "")
+    referrer = (body.get("referrer") or "").strip()
+    record_heartbeat(session_id, user_agent, referrer)
     return jsonify({"onlineCount": get_online_count()})
 
 
