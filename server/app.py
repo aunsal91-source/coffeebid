@@ -3,7 +3,10 @@ import json
 import os
 import time
 import urllib.parse
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+UK_TZ = ZoneInfo("Europe/London")
 from pathlib import Path
 
 import psycopg2
@@ -327,7 +330,7 @@ def generate_top3_image(top3):
     tw = draw.textlength(title, font=f_title)
     draw.text(((W - tw) / 2, 216), title, font=f_title, fill=IMG_TEXT)
 
-    date_str = datetime.now(timezone.utc).strftime("%-d %B %Y") if os.name != "nt" else datetime.now(timezone.utc).strftime("%d %B %Y").lstrip("0")
+    date_str = datetime.now(UK_TZ).strftime("%-d %B %Y") if os.name != "nt" else datetime.now(UK_TZ).strftime("%d %B %Y").lstrip("0")
     f_date = brand_font(26, "Regular")
     dw = draw.textlength(date_str, font=f_date)
     draw.text(((W - dw) / 2, 276), date_str, font=f_date, fill=IMG_TEXT_DIM)

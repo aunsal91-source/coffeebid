@@ -226,10 +226,31 @@
     return l.id.startsWith("seed-") ? 0 : l.amount;
   }
 
+  function tzOffsetMinutes(timeZone, date) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+    }).formatToParts(date).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
+    const asUTC = Date.UTC(
+      parts.year, parts.month - 1, parts.day,
+      parts.hour === "24" ? 0 : parts.hour, parts.minute, parts.second,
+    );
+    return (asUTC - date.getTime()) / 60000;
+  }
+
+  function startOfTodayUK() {
+    const now = new Date();
+    const ymd = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(now);
+    const naiveUTC = new Date(ymd + "T00:00:00Z");
+    const offsetMinutes = tzOffsetMinutes("Europe/London", naiveUTC);
+    return naiveUTC.getTime() - offsetMinutes * 60000;
+  }
+
   function rankedListings({ today = false, category = null } = {}) {
     let list = state.listings.slice();
     if (today) {
-      const cutoff = Date.now() - 24 * 3600 * 1000;
+      const cutoff = startOfTodayUK();
       list = list.filter((l) => l.claimedAt >= cutoff);
     }
     if (category) list = list.filter((l) => l.category === category);
@@ -273,6 +294,7 @@
     const launch = getLaunch();
     const dateStr = new Date(launch).toLocaleString("en-GB", {
       day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "2-digit",
+      timeZone: "Europe/London",
     });
     $("#aboutLaunchDate").textContent = dateStr;
     $("#aboutVisitors").textContent = state.visitors.toLocaleString("en-GB");
